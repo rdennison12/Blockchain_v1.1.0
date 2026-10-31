@@ -2,3 +2,4 @@
 
 ## Commits
 * Initial commit: Initial project setup
+* Refactored folder structure and file organization

@@ -5,4 +5,4 @@
 * Refactored folder structure and file organization
 * Created the initial Block class
   * To be refactored once the Blockchain class is implemented
-* 
+* Blockchain class created with basic functionality

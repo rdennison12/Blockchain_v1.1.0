@@ -52,3 +52,12 @@ def test_mine():
     block.mine(difficulty)
     assert block.hash.startswith("0" * difficulty)
     assert block.hash == block.calculate_hash()
+
+
+def test_create_genesis_block():
+    genesis_block = Block.create_genesis_block(difficulty=1)
+    assert genesis_block.index == 0
+    assert genesis_block.previous_hash == GENESIS_PREVIOUS_HASH
+    assert genesis_block.data == "Genesis Block"
+    assert genesis_block.hash.startswith("0")
+    assert genesis_block.hash == genesis_block.calculate_hash()

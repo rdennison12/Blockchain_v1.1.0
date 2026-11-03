@@ -8,9 +8,9 @@ GENESIS_PREVIOUS_HASH = "0"
 class Block:
     """Represents a block in the blockchain."""
 
-    def __init__(self, index, timestamp, data, previous_hash, nonce=0):
+    def __init__(self, index, timestamp=None, data="", previous_hash="", nonce=0):
         self.index = index
-        self.timestamp = timestamp
+        self.timestamp = timestamp if timestamp is not None else time.time()
         self.data = data
         self.previous_hash = previous_hash
         self.nonce = nonce
@@ -45,10 +45,18 @@ class Block:
             self._increment_nonce()
         print(f"Block {self.index} successfully mined: {self.hash}")
 
+    @classmethod
+    def create_genesis_block(cls, difficulty=0):
+        """Creates the genesis block of the blockchain."""
+        block = cls(0, time.time(), "Genesis Block", GENESIS_PREVIOUS_HASH)
+        if difficulty > 0:
+            block.mine(difficulty)
+        return block
+
 
 def create_genesis_block():
     """Creates the genesis block of the blockchain."""
-    return Block(0, time.time(), "Genesis Block", GENESIS_PREVIOUS_HASH)
+    return Block.create_genesis_block()
 
 
 def main():

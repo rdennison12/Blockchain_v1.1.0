@@ -15,10 +15,10 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "cryptography", specifier = ">=50.0.0" },
-    { name = "pytest", specifier = ">=9.0.3" },
-    { name = "python-dotenv", specifier = ">=1.2.2" },
-    { name = "requests", specifier = ">=2.33.0" },
+    { name = "cryptography", specifier = ">=50.0.2" },
+    { name = "pytest", specifier = ">=9.2.0" },
+    { name = "python-dotenv", specifier = ">=1.2.4" },
+    { name = "requests", specifier = ">=2.34.2" },
 ]
 
 [[package]]

@@ -49,13 +49,13 @@ def test_increment_nonce():
 def test_mine():
     block = Block(0, 1234567890, "data", GENESIS_PREVIOUS_HASH, nonce=0)
     difficulty = 2
-    block.mine(difficulty)
+    block.mine_block(difficulty)
     assert block.hash.startswith("0" * difficulty)
     assert block.hash == block.calculate_hash()
 
 
 def test_create_genesis_block():
-    genesis_block = Block.create_genesis_block(difficulty=1)
+    genesis_block = Block.genesis(difficulty=1)
     assert genesis_block.index == 0
     assert genesis_block.previous_hash == GENESIS_PREVIOUS_HASH
     assert genesis_block.data == "Genesis Block"

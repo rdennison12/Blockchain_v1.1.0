@@ -2,8 +2,27 @@ import hashlib
 import json
 import time
 
-GENESIS_PREVIOUS_HASH = "0"
+try:
+    from backend.util.crypto_hash import crypto_hash
+    from backend.util.hex_to_binary import hex_to_binary
+except ImportError:
+    try:
+        from blockchain_v1_1_0.backend.util.crypto_hash import crypto_hash
+        from blockchain_v1_1_0.backend.util.hex_to_binary import hex_to_binary
+    except ImportError:
+        try:
+            from .crypto_hash import crypto_hash
+            from .hex_to_binary import hex_to_binary
+        except ImportError:
+            from crypto_hash import crypto_hash # type: ignore[import-not-found] # noqa: F811
+            from hex_to_binary import hex_to_binary # type: ignore[import-not-found] # noqa: F811
 
+GENESIS_PREVIOUS_HASH = "0"
+GENESIS_DATA = {
+    'index': 0,
+    'data': 'Genesis Block',
+    'previous_hash': GENESIS_PREVIOUS_HASH,
+}
 
 class Block:
     """Represents a block in the blockchain."""
@@ -15,6 +34,13 @@ class Block:
         self.previous_hash = previous_hash
         self.nonce = nonce
         self.hash = self.calculate_hash()
+
+    def __repr__(self):
+        return (
+            f"Block(index={self.index}, timestamp={self.timestamp}, "
+            f"data={self.data}, previous_hash={self.previous_hash}, "
+            f"hash={self.hash}, nonce={self.nonce})"
+        )
 
     def calculate_hash(self):
         """Calculates the hash of the block."""
@@ -40,34 +66,44 @@ class Block:
         self.nonce += 1
         self.hash = self.calculate_hash()
 
-    def mine(self, difficulty):
+    def mine_block(self, difficulty):
+        """Mines a block by incrementing nonce until the hash satisfies difficulty."""
         while not self._meets_difficulty(difficulty):
             self._increment_nonce()
         print(f"Block {self.index} successfully mined: {self.hash}")
 
+    mine = mine_block
+
     @classmethod
-    def create_genesis_block(cls, difficulty=0):
-        """Creates the genesis block of the blockchain."""
-        block = cls(0, time.time(), "Genesis Block", GENESIS_PREVIOUS_HASH)
+    def genesis(cls, difficulty=0):
+        """Generates the genesis block of the blockchain."""
+        block = cls(
+            index=0,
+            timestamp=time.time(),
+            data="Genesis Block",
+            previous_hash=GENESIS_PREVIOUS_HASH,
+        )
         if difficulty > 0:
-            block.mine(difficulty)
+            block.mine_block(difficulty)
         return block
 
+    create_genesis_block = genesis
 
-def create_genesis_block():
+
+def create_genesis_block(difficulty=0):
     """Creates the genesis block of the blockchain."""
-    return Block.create_genesis_block()
+    return Block.genesis(difficulty)
 
 
 def main():
     difficulty = 4
     chain = [create_genesis_block()]
-    chain[0].mine(difficulty)
+    chain[0].mine_block(difficulty)
 
     for i in range(1, 5):
         previous = chain[-1]
         block = Block(i, time.time(), f"Block {i} data", previous.hash)
-        block.mine(difficulty)
+        block.mine_block(difficulty)
         chain.append(block)
 
 

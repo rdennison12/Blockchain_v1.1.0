@@ -1,4 +1,5 @@
-from backend.util.hex_to_binary import hex_to_binary
+from blockchain_v1_1_0.backend.util.hex_to_binary import hex_to_binary
+
 
 def test_hex_to_binary():
     original_number = 789
